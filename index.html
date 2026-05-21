@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ZHARQYRA</title>
-  <link rel="apple-touch-icon" href="https://img.icons8.com/fluent/512/star.png">
+  <link rel="apple-touch-icon" href="https://i.pinimg.com/736x/87/4c/83/874c833d737384a861d9a2472e38c92b.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#FFEBE3">
 
@@ -24,7 +24,7 @@
     .screen { display: none; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
     .screen.active { display: flex; }
     
-    /* Навигационное меню (Таб-бар) внизу */
+    /* Нижнее меню (Таб-бар) */
     .bottom-nav {
       position: absolute; bottom: 0; left: 0; right: 0;
       height: 70px; background: white;
@@ -43,12 +43,23 @@
     .nav-item .nav-icon { font-size: 22px; margin-bottom: 2px; }
     .nav-item.active { color: #C1A3FF; }
 
-    /* Экран 1 и 2 */
+    /* Экраны старта и регистрации */
     .back-arrow { font-size: 28px; color: #555; cursor: pointer; margin-bottom: 40px; }
     .welcome-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .logo-circle { width: 140px; height: 140px; background: linear-gradient(135deg, #A0C4FF 0%, #C1A3FF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .star-icon { width: 70px; height: 70px; fill: #FFD966; }
-    .brand-title { color: #B388EB; font-size: 32px; letter-spacing: 2px; margin-top: 25px; }
+    
+    /* Новая крутая аватарка-логотип с твоей картинкой */
+    .logo-img-wrapper {
+      width: 150px; height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(163, 201, 255, 0.4);
+      border: 4px solid white;
+    }
+    .logo-img-wrapper img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .brand-title { color: #B388EB; font-size: 32px; letter-spacing: 2px; margin-top: 25px; font-weight: bold; }
     .button-group { margin-bottom: 50px; display: flex; flex-direction: column; gap: 15px; }
     .btn { width: 100%; padding: 16px; border: none; border-radius: 25px; font-size: 18px; font-weight: 500; color: white; cursor: pointer; box-sizing: border-box; }
     .btn-blue-grad { background: linear-gradient(90deg, #A3C9FF 0%, #D6E8FF 100%); }
@@ -94,12 +105,12 @@
     .event-card { background: #D6E8FF; border-radius: 12px; padding: 8px 12px; margin-left: 45px; display: flex; justify-content: space-between; align-items: center; color: #333; }
     .alert-banner { background: #FFEBE3; padding: 15px; border-radius: 15px; margin-top: 15px; font-size: 13px; color: #555; margin-bottom: 20px; }
 
-    /* Стили для новых экранов уроков и игр */
+    /* Уроки и Игры */
     .lesson-box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 10px; }
     .visual-emoji-card { background: #EBF8FF; border: 2px dashed #A3C9FF; border-radius: 20px; text-align: center; padding: 40px; margin: 20px 0; }
     .big-emoji { font-size: 90px; display: block; margin-bottom: 10px; }
     .emoji-label { font-size: 20px; font-weight: 800; color: #A3C9FF; letter-spacing: 2px; }
-    .btn-speak { background: linear-gradient(90deg, #A3C9FF 0%, #C1A3FF 100%); color: white; font-size: 16px; margin-top: 10px; }
+    .btn-speak { background: linear-gradient(90deg, #A3C9FF 0%, #C1A3FF 100%); color: white; font-size: 16px; margin-top: 10px; width: 100%; border: none; padding: 12px; border-radius: 15px; }
     
     .quiz-options { display: flex; justify-content: space-around; margin: 25px 0; }
     .quiz-btn { font-size: 45px; background: white; border: 2px solid #FFEBE3; width: 85px; height: 85px; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
@@ -113,8 +124,8 @@
   <div id="screen-start" class="screen active">
     <div class="back-arrow">‹</div>
     <div class="welcome-content">
-      <div class="logo-circle">
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.784 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192z"/></svg>
+      <div class="logo-img-wrapper">
+        <img src="https://i.pinimg.com/736x/87/4c/83/874c833d737384a861d9a2472e38c92b.jpg" alt="ZHARQYRA Logo">
       </div>
       <h1 class="brand-title">ZHARQYRA</h1>
     </div>
@@ -219,7 +230,6 @@
 </div>
 
 <script>
-  // Логика переключения стартовых экранов
   const screenStart = document.getElementById('screen-start');
   const screenReg = document.getElementById('screen-reg');
   const screenHome = document.getElementById('screen-home');
@@ -233,27 +243,29 @@
   document.getElementById('do-register').addEventListener('click', () => {
     screenReg.classList.remove('active');
     screenHome.classList.add('active');
-    navBar.classList.add('visible'); // Показываем нижнее меню после регистрации
+    navBar.classList.add('visible');
   });
 
-  // Логика нижнего меню (Таб-бара)
+  // Исправленная логика переключения таб-бара
   const navItems = document.querySelectorAll('.nav-item');
   const allScreens = document.querySelectorAll('.screen');
 
   navItems.forEach(item => {
     item.addEventListener('click', () => {
-      // Убираем активный класс у кнопок меню
       navItems.forEach(btn => btn.classList.remove('active'));
       item.classList.add('active');
 
-      // Скрываем все экраны и открываем нужный
       const targetScreenId = item.getAttribute('data-target');
-      allScreens.forEach(screen => screen.classList.remove('active'));
-      document.getElementById(targetScreenId).add('active');
+      allScreens.forEach(screen => {
+        if(screen.id === 'screen-home' || screen.id === 'screen-lessons' || screen.id === 'screen-games') {
+          screen.classList.remove('active');
+        }
+      });
+      document.getElementById(targetScreenId).classList.add('active');
     });
   });
 
-  // Интерактив для Урока (Озвучка текста)
+  // Озвучка
   document.getElementById('btn-play-audio').addEventListener('click', () => {
     const text = document.getElementById('lesson-text').innerText;
     const utterance = new SpeechSynthesisUtterance(text);
@@ -261,9 +273,8 @@
     window.speechSynthesis.speak(utterance);
   });
 
-  // Интерактив для Игры
+  // Игра
   const feedback = document.getElementById('game-feedback');
-  
   document.getElementById('game-happy').addEventListener('click', () => {
     feedback.innerText = "🎉 Правильно! Ты молодец!";
     feedback.style.color = "#48bb78";
@@ -276,10 +287,6 @@
     feedback.innerText = "Это злость, попробуй еще раз! 😉";
     feedback.style.color = "#f56565";
   });
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
 </script>
 </body>
 </html>
