@@ -2,27 +2,48 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ZHARQYRA</title>
-  
-  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/fluent/512/star.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#FFEBE3">
 
   <style>
-    /* Вставь сюда ВЕСЬ код из вкладки CSS в CodePen */
     body {
       margin: 0; padding: 0; background-color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
     }
     .phone-container {
-      width: 100vw; height: 100vh; /* Теперь на весь экран телефона */
+      width: 100vw; height: 100vh;
       background: linear-gradient(180deg, #FFEBE3 0%, #FFFFFF 100%);
       position: relative; display: flex; flex-direction: column;
+      overflow: hidden;
     }
-    .screen { display: none; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; flex-direction: column; }
+    .screen { display: none; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
     .screen.active { display: flex; }
+    
+    /* Навигационное меню (Таб-бар) внизу */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 70px; background: white;
+      border-top: 1px solid #FFEBE3;
+      display: none; justify-content: space-around; align-items: center;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 100;
+    }
+    .bottom-nav.visible { display: flex; }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      background: none; border: none; color: #aaa; cursor: pointer; font-size: 11px; font-weight: 500;
+      padding: 5px; transition: color 0.2s;
+    }
+    .nav-item .nav-icon { font-size: 22px; margin-bottom: 2px; }
+    .nav-item.active { color: #C1A3FF; }
+
+    /* Экран 1 и 2 */
     .back-arrow { font-size: 28px; color: #555; cursor: pointer; margin-bottom: 40px; }
     .welcome-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .logo-circle { width: 140px; height: 140px; background: linear-gradient(135deg, #A0C4FF 0%, #C1A3FF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
@@ -46,15 +67,16 @@
     .bg-green { background-color: #E8F5E9; }
     .role-text { flex: 1; font-size: 18px; }
     .star-badge { font-size: 20px; color: #B388EB; }
+
+    /* Личный кабинет */
     .cabinet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top: 20px; }
     .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 45px; height: 45px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .user-avatar { width: 45px; height: 45px; background: #E8DBFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
     .welcome-text { font-size: 11px; color: #B388EB; }
     .user-name { font-size: 14px; font-weight: bold; }
     .header-icons { display: flex; gap: 10px; }
     .icon-btn { width: 35px; height: 35px; background: #FFF0EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .scroll-section { overflow-y: auto; flex: 1; }
-    .block-title { margin: 15px 0 10px 0; font-size: 16px; }
+    .block-title { margin: 15px 0 10px 0; font-size: 16px; color: #333; }
     .cards-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px; }
     .card { min-width: 160px; padding: 15px; border-radius: 20px; color: #333; display: flex; flex-direction: column; justify-content: space-between; }
     .card h5 { margin: 0 0 8px 0; font-size: 12px; }
@@ -71,11 +93,23 @@
     .time-row hr { border: none; border-top: 1px dashed #eee; margin: 5px 0; }
     .event-card { background: #D6E8FF; border-radius: 12px; padding: 8px 12px; margin-left: 45px; display: flex; justify-content: space-between; align-items: center; color: #333; }
     .alert-banner { background: #FFEBE3; padding: 15px; border-radius: 15px; margin-top: 15px; font-size: 13px; color: #555; margin-bottom: 20px; }
+
+    /* Стили для новых экранов уроков и игр */
+    .lesson-box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 10px; }
+    .visual-emoji-card { background: #EBF8FF; border: 2px dashed #A3C9FF; border-radius: 20px; text-align: center; padding: 40px; margin: 20px 0; }
+    .big-emoji { font-size: 90px; display: block; margin-bottom: 10px; }
+    .emoji-label { font-size: 20px; font-weight: 800; color: #A3C9FF; letter-spacing: 2px; }
+    .btn-speak { background: linear-gradient(90deg, #A3C9FF 0%, #C1A3FF 100%); color: white; font-size: 16px; margin-top: 10px; }
+    
+    .quiz-options { display: flex; justify-content: space-around; margin: 25px 0; }
+    .quiz-btn { font-size: 45px; background: white; border: 2px solid #FFEBE3; width: 85px; height: 85px; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    .feedback-text { text-align: center; font-size: 18px; font-weight: bold; margin-top: 15px; min-height: 25px; }
   </style>
 </head>
 <body>
 
 <div class="phone-container">
+
   <div id="screen-start" class="screen active">
     <div class="back-arrow">‹</div>
     <div class="welcome-content">
@@ -105,7 +139,7 @@
     <button class="btn btn-purple-solid" id="do-register">Зарегистрироваться</button>
   </div>
 
-  <div id="screen-cabinet" class="screen">
+  <div id="screen-home" class="screen">
     <header class="cabinet-header">
       <div class="user-info">
         <div class="user-avatar">👩</div>
@@ -116,46 +150,133 @@
       </div>
       <div class="header-icons"><span class="icon-btn">🔔</span><span class="icon-btn">⚙️</span></div>
     </header>
-    <section class="scroll-section">
-      <h4 class="block-title">Рекомендации</h4>
-      <div class="cards-row">
-        <div class="card card-purple"><h5>Мы подобрали для Вас специалиста</h5><p>Мы проанализировали Ваши потребности...</p><button class="card-btn">Узнать больше</button></div>
-        <div class="card card-cyan"><h5>Полезная статья для родителей</h5><p>Практические советы и поддержка...</p><button class="card-btn">Читать</button></div>
+    
+    <h4 class="block-title">Рекомендации</h4>
+    <div class="cards-row">
+      <div class="card card-purple"><h5>Мы подобрали для Вас специалиста</h5><p>Мы проанализировали Ваши потребности...</p><button class="card-btn">Узнать больше</button></div>
+      <div class="card card-cyan"><h5>Полезная статья для родителей</h5><p>Практические советы и поддержка...</p><button class="card-btn">Читать</button></div>
+    </div>
+    
+    <h4 class="block-title">Ближайшие консультации</h4>
+    <div class="calendar-container">
+      <div class="days-row"><span class="day">9</span><span class="day">10</span><span class="day active">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span></div>
+      <div class="schedule-box">
+        <div class="time-row"><span>9 AM</span><hr></div>
+        <div class="time-row"><span>10 AM</span><div class="event-card"><div><strong>Dr. Sagidulla</strong><div style="font-size:10px; color:#666;">Занятие по сенсорике</div></div><div class="event-status">✔️ ❌</div></div></div>
+        <div class="time-row"><span>11 AM</span></div>
+        <div class="time-row"><span>12 AM</span><hr></div>
       </div>
-      <h4 class="block-title">Ближайшие консультации</h4>
-      <div class="calendar-container">
-        <div class="days-row"><span class="day">9</span><span class="day">10</span><span class="day active">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span></div>
-        <div class="schedule-box">
-          <div class="time-row"><span>9 AM</span><hr></div>
-          <div class="time-row"><span>10 AM</span><div class="event-card"><div><strong>Dr. Sagidulla N.</strong><div style="font-size:10px; color:#666;">Занятие по сенсорике</div></div><div class="event-status">✔️ ❌</div></div></div>
-          <div class="time-row"><span>11 AM</span></div>
-          <div class="time-row"><span>12 AM</span><hr></div>
-        </div>
-      </div>
-      <div class="alert-banner">Напоминание о важной встрече</div>
-    </section>
+    </div>
+    <div class="alert-banner">Напоминание о важной встрече</div>
   </div>
+
+  <div id="screen-lessons" class="screen">
+    <h2 class="block-title" style="font-size:24px;">📚 Инклюзивные уроки</h2>
+    <div class="lesson-box">
+      <h3>Урок 1: Изучаем Радость</h3>
+      <p id="lesson-text" style="color:#555; line-height:1.4;">Посмотри на картинку ниже. Это Радость! Когда человеку очень хорошо, он улыбается.</p>
+      
+      <div class="visual-emoji-card">
+        <span class="big-emoji">😊</span>
+        <div class="emoji-label">РАДОСТЬ</div>
+      </div>
+      
+      <button class="btn btn-speak" id="btn-play-audio">🔊 Озвучить текст урока</button>
+    </div>
+  </div>
+
+  <div id="screen-games" class="screen">
+    <h2 class="block-title" style="font-size:24px;">🎮 Развивающие игры</h2>
+    <div class="lesson-box">
+      <h3>Мини-игра: «Найди Радость»</h3>
+      <p style="color:#555;">Посмотри на смайлики и нажми на тот, который выражает радость и улыбается:</p>
+      
+      <div class="quiz-options">
+        <button class="quiz-btn" id="game-sad">😢</button>
+        <button class="quiz-btn" id="game-happy">😀</button>
+        <button class="quiz-btn" id="game-angry">😡</button>
+      </div>
+      
+      <div id="game-feedback" class="feedback-text"></div>
+    </div>
+  </div>
+
+  <div id="main-nav-bar" class="bottom-nav">
+    <button class="nav-item active" data-target="screen-home">
+      <span class="nav-icon">🏠</span>
+      <span>Главная</span>
+    </button>
+    <button class="nav-item" data-target="screen-lessons">
+      <span class="nav-icon">📖</span>
+      <span>Уроки</span>
+    </button>
+    <button class="nav-item" data-target="screen-games">
+      <span class="nav-icon">🧩</span>
+      <span>Игры</span>
+    </button>
+  </div>
+
 </div>
 
 <script>
-  /* Вставь сюда ВЕСЬ код из вкладки JS в CodePen */
+  // Логика переключения стартовых экранов
   const screenStart = document.getElementById('screen-start');
   const screenReg = document.getElementById('screen-reg');
-  const screenCabinet = document.getElementById('screen-cabinet');
-  const btnGoToReg = document.getElementById('go-to-reg');
-  const btnDoRegister = document.getElementById('do-register');
+  const screenHome = document.getElementById('screen-home');
+  const navBar = document.getElementById('main-nav-bar');
 
-  btnGoToReg.addEventListener('click', () => {
+  document.getElementById('go-to-reg').addEventListener('click', () => {
     screenStart.classList.remove('active');
     screenReg.classList.add('active');
   });
 
-  btnDoRegister.addEventListener('click', () => {
+  document.getElementById('do-register').addEventListener('click', () => {
     screenReg.classList.remove('active');
-    screenCabinet.classList.add('active');
+    screenHome.classList.add('active');
+    navBar.classList.add('visible'); // Показываем нижнее меню после регистрации
   });
 
-  // Регистрация Service Worker (нужно для PWA)
+  // Логика нижнего меню (Таб-бара)
+  const navItems = document.querySelectorAll('.nav-item');
+  const allScreens = document.querySelectorAll('.screen');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // Убираем активный класс у кнопок меню
+      navItems.forEach(btn => btn.classList.remove('active'));
+      item.classList.add('active');
+
+      // Скрываем все экраны и открываем нужный
+      const targetScreenId = item.getAttribute('data-target');
+      allScreens.forEach(screen => screen.classList.remove('active'));
+      document.getElementById(targetScreenId).add('active');
+    });
+  });
+
+  // Интерактив для Урока (Озвучка текста)
+  document.getElementById('btn-play-audio').addEventListener('click', () => {
+    const text = document.getElementById('lesson-text').innerText;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ru-RU';
+    window.speechSynthesis.speak(utterance);
+  });
+
+  // Интерактив для Игры
+  const feedback = document.getElementById('game-feedback');
+  
+  document.getElementById('game-happy').addEventListener('click', () => {
+    feedback.innerText = "🎉 Правильно! Ты молодец!";
+    feedback.style.color = "#48bb78";
+  });
+  document.getElementById('game-sad').addEventListener('click', () => {
+    feedback.innerText = "Это грусть, попробуй еще раз! 😉";
+    feedback.style.color = "#f56565";
+  });
+  document.getElementById('game-angry').addEventListener('click', () => {
+    feedback.innerText = "Это злость, попробуй еще раз! 😉";
+    feedback.style.color = "#f56565";
+  });
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
